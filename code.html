@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRU Standardization Platform - H2S Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+            transition: background 0.5s ease;
+        }
+
+        /* Background classes for different H2S levels */
+        body.simple-mixer {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        body.preheat {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        body.acid-bypass {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        body.acid-bypass-preheat {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        body.fuel-gas {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        body.catalytic {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Gas Composition Section */
+        .composition-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #1e3c72;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .input-unit {
+            position: absolute;
+            right: 15px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .total-row {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .total-value {
+            font-size: 1.2em;
+            color: #1e3c72;
+        }
+
+        .validation-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .validation-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .validation-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Configuration Selector */
+        .config-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .config-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .recommendation-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .recommendation-box h3 {
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+
+        .recommendation-box p {
+            color: #1976d2;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-button:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .dropdown-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .dropdown-button:disabled:hover { /* Prevent hover effects when disabled */
+            background: #ccc;
+            transform: none;
+            box-shadow: none;
+        }
+
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+            z-index: 100;
+        }
+
+        .dropdown-menu.open {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f5f7fa;
+            padding-left: 30px;
+        }
+
+        .dropdown-item.recommended {
+            background: #e3f2fd;
+        }
+
+        .dropdown-item.recommended:hover {
+            background: #bbdefb;
+        }
+
+        .dropdown-item-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Icon colors matching background themes */
+        .icon-simple-mixer { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); }
+        .icon-preheat { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+        .icon-acid-bypass { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); }
+        .icon-acid-bypass-preheat { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+        .icon-fuel-gas { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+        .icon-catalytic { background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); }
+
+        .dropdown-item-content h4 {
+            color: #1e3c72;
+            margin-bottom: 3px;
+        }
+
+        .dropdown-item-content p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .h2s-percentage {
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .recommended-badge {
+            background: #2196f3;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-button {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #555;
+            transform: translateX(-5px);
+        }
+
+        .composition-summary {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .composition-summary h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .composition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .composition-item {
+            text-align: center;
+        }
+
+        .composition-item .label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .composition-item .value {
+            color: #1e3c72;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-card {
+            background: #f5f7fa;
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            padding: 8px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-card li:before {
+            content: "▸";
+            margin-right: 10px;
+            color: #1e3c72;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dropdown-item-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>SRU Standardization Platform</h1>
+            <p>H2S-Based Configuration Selection System</p>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid" id="mainGrid">
+            <!-- Gas Composition Input Section -->
+            <div class="composition-section">
+                <h2 class="section-title">Acid Gas Composition</h2>
+                
+                <div class="input-group">
+                    <label for="h2s">H2S (Hydrogen Sulfide)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="h2s" min="0" max="100" step="0.01" placeholder="0.00">
+                        <span class="input-unit">mol%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="co2">CO2 (Carbon Dioxide)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="co2" min="0" max="100" step="0.01" placeholder="0.00">
+                        <span class="input-unit">mol%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="nh3">NH3 (Ammonia)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="nh3" min="0" max="100" step="0.01" placeholder="0.00">
+                        <span class="input-unit">mol%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="btex">BTEX (Benzene, Toluene, Ethylbenzene, Xylene)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="btex" min="0" max="100" step="0.01" placeholder="0.00">
+                        <span class="input-unit">mol%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="other_hc">Other HC (Other Hydrocarbons)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="other_hc" min="0" max="100" step="0.01" placeholder="0.00">
+                        <span class="input-unit">mol%</span>
+                    </div>
+                </div>
+
+                <div class="total-row">
+                    <span>Total:</span>
+                    <span class="total-value" id="totalValue">0.00%</span>
+                </div>
+
+                <div id="validationMessage"></div>
+            </div>
+
+            <!-- Configuration Selector Section -->
+            <div class="config-section" id="configSection">
+                <h2 class="section-title">Select Configuration</h2>
+                
+                <div class="recommendation-box" id="recommendationBox" style="display: none;">
+                    <h3>Recommended Configuration</h3>
+                    <p id="recommendedConfig"></p>
+                </div>
+
+                <div class="dropdown-container">
+                    <button class="dropdown-button" id="dropdownButton" onclick="toggleDropdown()" disabled>
+                        <span>Enter gas composition first</span>
+                        <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="dropdown-item" id="config-simple-mixer" onclick="selectConfig('simple-mixer')">
+                            <div class="dropdown-item-icon icon-simple-mixer">&gt;55%</div>
+                            <div class="dropdown-item-content">
+                                <h4>Simple Mixer Configuration</h4>
+                                <p><span class="h2s-percentage">H2S &gt; 55%</span> - High concentration processing</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-item" id="config-preheat" onclick="selectConfig('preheat')">
+                            <div class="dropdown-item-icon icon-preheat">30-55%</div>
+                            <div class="dropdown-item-content">
+                                <h4>Preheat Configuration</h4>
+                                <p><span class="h2s-percentage">H2S 30-55%</span> - Medium-high concentration</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-item" id="config-acid-bypass" onclick="selectConfig('acid-bypass')">
+                            <div class="dropdown-item-icon icon-acid-bypass">15-30%</div>
+                            <div class="dropdown-item-content">
+                                <h4>Acid Gas Bypass</h4>
+                                <p><span class="h2s-percentage">H2S 15-30%</span> - Medium concentration</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-item" id="config-acid-bypass-preheat" onclick="selectConfig('acid-bypass-preheat')">
+                            <div class="dropdown-item-icon icon-acid-bypass-preheat">10-15%</div>
+                            <div class="dropdown-item-content">
+                                <h4>Acid Gas Bypass + Preheat</h4>
+                                <p><span class="h2s-percentage">H2S 10-15%</span> - Medium-low concentration</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-item" id="config-fuel-gas" onclick="selectConfig('fuel-gas')">
+                            <div class="dropdown-item-icon icon-fuel-gas">5-10%</div>
+                            <div class="dropdown-item-content">
+                                <h4>Fuel Gas Configuration</h4>
+                                <p><span class="h2s-percentage">H2S 5-10%</span> - Low concentration</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-item" id="config-catalytic" onclick="selectConfig('catalytic')">
+                            <div class="dropdown-item-icon icon-catalytic">&lt;5%</div>
+                            <div class="dropdown-item-content">
+                                <h4>Catalytic H2S Oxidation</h4>
+                                <p><span class="h2s-percentage">H2S &lt; 5%</span> - Very low concentration</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content (Hidden by default) -->
+        <div class="page-content" id="pageContent">
+            <button class="back-button" onclick="goBack()">← Back to Configuration Selection</button>
+            
+            <div class="composition-summary">
+                <h3>Gas Composition Summary</h3>
+                <div class="composition-grid" id="compositionGrid">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+
+            <h2 id="pageTitle"></h2>
+            <p id="pageDescription"></p>
+            <div class="info-grid" id="infoGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Store gas composition
+        let gasComposition = {
+            h2s: 0,
+            co2: 0,
+            nh3: 0,
+            btex: 0,
+            other_hc: 0
+        };
+
+        // Update total and validate - make it globally accessible
+        window.updateTotal = function() {
+            const h2sInput = parseFloat(document.getElementById('h2s').value) || 0;
+            const co2Input = parseFloat(document.getElementById('co2').value) || 0;
+            const nh3Input = parseFloat(document.getElementById('nh3').value) || 0;
+            const btexInput = parseFloat(document.getElementById('btex').value) || 0;
+            const other_hcInput = parseFloat(document.getElementById('other_hc').value) || 0;
+
+            // Store values
+            gasComposition = { h2s: h2sInput, co2: co2Input, nh3: nh3Input, btex: btexInput, other_hc: other_hcInput };
+
+            const total = h2sInput + co2Input + nh3Input + btexInput + other_hcInput;
+            
+            document.getElementById('totalValue').textContent = total.toFixed(2) + '%';
+            
+            const validationMessage = document.getElementById('validationMessage');
+            const dropdownButton = document.getElementById('dropdownButton');
+            const recommendationBox = document.getElementById('recommendationBox');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const dropdownArrow = document.getElementById('dropdownArrow');
+
+            // Round total to 2 decimal places for comparison, to match display
+            const roundedTotal = parseFloat(total.toFixed(2));
+
+            // Check if all inputs are effectively zero (empty or '0')
+            const allInputsZero = h2sInput === 0 && co2Input === 0 && nh3Input === 0 && btexInput === 0 && other_hcInput === 0;
+
+            if (allInputsZero) {
+                validationMessage.innerHTML = '';
+                dropdownButton.disabled = true;
+                dropdownButton.innerHTML = '<span>Enter gas composition first</span><span class="dropdown-arrow" id="dropdownArrow">▼</span>';
+                recommendationBox.style.display = 'none';
+                dropdownMenu.classList.remove('open'); // Close dropdown if open
+                // The new innerHTML recreates dropdownArrow, so its 'open' class is implicitly removed
+            } else if (roundedTotal === 100.00) {
+                validationMessage.innerHTML = '<div class="validation-success">✓ Composition is valid (100%)</div>';
+                dropdownButton.disabled = false;
+                dropdownButton.innerHTML = '<span>Choose H2S Configuration</span><span class="dropdown-arrow" id="dropdownArrow">▼</span>';
+                
+                // Show recommendation
+                updateRecommendation(h2sInput);
+            } else {
+                validationMessage.innerHTML = `<div class="validation-error">✗ Total must equal 100% (currently ${total.toFixed(2)}%)</div>`;
+                dropdownButton.disabled = true;
+                dropdownButton.innerHTML = '<span>Complete composition to 100%</span><span class="dropdown-arrow" id="dropdownArrow">▼</span>';
+                recommendationBox.style.display = 'none';
+                dropdownMenu.classList.remove('open'); // Close dropdown if open
+                // The new innerHTML recreates dropdownArrow, so its 'open' class is implicitly removed
+            }
+        }
+
+        // Configuration data
+        const configurations = {
+            'simple-mixer': {
+                title: 'Simple Mixer Configuration',
+                description: 'Optimized for acid gas with H2S concentration greater than 55%',
+                colorClass: 'simple-mixer',
+                minH2S: 55,
+                maxH2S: 100,
+                info: [
+                    {
+                        title: 'Process Parameters',
+                        items: [
+                            'Direct mixing of acid gas and air',
+                            'Minimal preheating required',
+                            'High combustion efficiency',
+                            'Simple control system'
+                        ]
+                    },
+                    {
+                        title: 'Equipment Requirements',
+                        items: [
+                            'Standard burner configuration',
+                            'Basic mixing chamber',
+                            'Standard refractory lining',
+                            'Simple instrumentation'
+                        ]
+                    },
+                    {
+                        title: 'Operating Conditions',
+                        items: [
+                            'Temperature: 1200-1400°C',
+                            'Residence time: 0.5-1.0 seconds',
+                            'Air ratio: 1.0-1.1',
+                            'Stable flame characteristics'
+                        ]
+                    }
+                ]
+            },
+            'preheat': {
+                title: 'Preheat Configuration',
+                description: 'Designed for acid gas with H2S concentration between 30-55%',
+                colorClass: 'preheat',
+                minH2S: 30,
+                maxH2S: 55,
+                info: [
+                    {
+                        title: 'Process Parameters',
+                        items: [
+                            'Acid gas preheating required',
+                            'Enhanced combustion stability',
+                            'Improved sulfur recovery',
+                            'Temperature control critical'
+                        ]
+                    },
+                    {
+                        title: 'Equipment Requirements',
+                        items: [
+                            'Preheat exchanger system',
+                            'Enhanced burner design',
+                            'Temperature control loops',
+                            'Advanced refractory system'
+                        ]
+                    },
+                    {
+                        title: 'Operating Conditions',
+                        items: [
+                            'Preheat temperature: 200-300°C',
+                            'Combustion temp: 1100-1300°C',
+                            'Air ratio: 1.1-1.2',
+                            'Controlled flame zone'
+                        ]
+                    }
+                ]
+            },
+            'acid-bypass': {
+                title: 'Acid Gas Bypass Configuration',
+                description: 'Configured for acid gas with H2S concentration between 15-30%',
+                colorClass: 'acid-bypass',
+                minH2S: 15,
+                maxH2S: 30,
+                info: [
+                    {
+                        title: 'Process Parameters',
+                        items: [
+                            'Partial acid gas bypass',
+                            'Split flow configuration',
+                            'Bypass ratio optimization',
+                            'Enhanced mixing required'
+                        ]
+                    },
+                    {
+                        title: 'Equipment Requirements',
+                        items: [
+                            'Bypass control valves',
+                            'Split flow manifold',
+                            'Enhanced mixing chamber',
+                            'Flow measurement systems'
+                        ]
+                    },
+                    {
+                        title: 'Operating Conditions',
+                        items: [
+                            'Bypass ratio: 20-40%',
+                            'Mixed temp: 1000-1200°C',
+                            'Residence time: 1.0-1.5 sec',
+                            'Precise flow control'
+                        ]
+                    }
+                ]
+            },
+            'acid-bypass-preheat': {
+                title: 'Acid Gas Bypass + Preheat Configuration',
+                description: 'Complex setup for acid gas with H2S concentration between 10-15%',
+                colorClass: 'acid-bypass-preheat',
+                minH2S: 10,
+                maxH2S: 15,
+                info: [
+                    {
+                        title: 'Process Parameters',
+                        items: [
+                            'Combined bypass and preheat',
+                            'Multi-stage combustion',
+                            'Complex control strategy',
+                            'Optimized heat recovery'
+                        ]
+                    },
+                    {
+                        title: 'Equipment Requirements',
+                        items: [
+                            'Dual control systems',
+                            'Preheat + bypass equipment',
+                            'Advanced instrumentation',
+                            'Multi-zone temperature control'
+                        ]
+                    },
+                    {
+                        title: 'Operating Conditions',
+                        items: [
+                            'Preheat: 250-350°C',
+                            'Bypass: 30-50%',
+                            'Zone temps: 900-1100°C',
+                            'Critical stability control'
+                        ]
+                    }
+                ]
+            },
+            'fuel-gas': {
+                title: 'Fuel Gas Configuration',
+                description: 'Specialized setup for acid gas with H2S concentration between 5-10%',
+                colorClass: 'fuel-gas',
+                minH2S: 5,
+                maxH2S: 10,
+                info: [
+                    {
+                        title: 'Process Parameters',
+                        items: [
+                            'Supplemental fuel required',
+                            'Enhanced combustion support',
+                            'Fuel gas injection system',
+                            'Flame stability critical'
+                        ]
+                    },
+                    {
+                        title: 'Equipment Requirements',
+                        items: [
+                            'Fuel gas supply system',
+                            'Specialized burner design',
+                            'Flame monitoring system',
+                            'Emergency fuel backup'
+                        ]
+                    },
+                    {
+                        title: 'Operating Conditions',
+                        items: [
+                            'Fuel gas: 5-15% of feed',
+                            'Temperature: 900-1100°C',
+                            'Enhanced air ratio: 1.2-1.4',
+                            'Continuous flame monitoring'
+                        ]
+                    }
+                ]
+            },
+            'catalytic': {
+                title: 'Catalytic H2S Oxidation',
+                description: 'Advanced catalytic process for acid gas with H2S concentration less than 5%',
+                colorClass: 'catalytic',
+                minH2S: 0,
+                maxH2S: 5,
+                info: [
+                    {
+                        title: 'Process Parameters',
+                        items: [
+                            'Catalytic conversion process',
+                            'Lower temperature operation',
+                            'High space velocity',
+                            'Catalyst management critical'
+                        ]
+                    },
+                    {
+                        title: 'Equipment Requirements',
+                        items: [
+                            'Catalyst bed reactors',
+                            'Temperature control system',
+                            'Catalyst monitoring',
+                            'Regeneration facilities'
+                        ]
+                    },
+                    {
+                        title: 'Operating Conditions',
+                        items: [
+                            'Temperature: 200-400°C',
+                            'Space velocity: 1000-3000 h⁻¹',
+                            'Catalyst life: 3-5 years',
+                            'Periodic regeneration'
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Update recommendation based on H2S
+        function updateRecommendation(h2s) {
+            const recommendationBox = document.getElementById('recommendationBox');
+            const recommendedConfigElement = document.getElementById('recommendedConfig'); // Renamed to avoid conflict
+            
+            recommendationBox.style.display = 'block';
+            
+            // Clear all previous recommendations
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.classList.remove('recommended');
+            });
+            
+            let configKey = '';
+            let configText = ''; // To store the text for the recommendation box
+            if (h2s > 55) {
+                configText = 'Simple Mixer Configuration';
+                configKey = 'simple-mixer';
+            } else if (h2s >= 30 && h2s <= 55) {
+                configText = 'Preheat Configuration';
+                configKey = 'preheat';
+            } else if (h2s >= 15 && h2s < 30) {
+                configText = 'Acid Gas Bypass';
+                configKey = 'acid-bypass';
+            } else if (h2s >= 10 && h2s < 15) {
+                configText = 'Acid Gas Bypass + Preheat';
+                configKey = 'acid-bypass-preheat';
+            } else if (h2s >= 5 && h2s < 10) {
+                configText = 'Fuel Gas Configuration';
+                configKey = 'fuel-gas';
+            } else { // h2s < 5
+                configText = 'Catalytic H2S Oxidation';
+                configKey = 'catalytic';
+            }
+            recommendedConfigElement.textContent = configText;
+            
+            // Highlight recommended option
+            const recommendedItem = document.getElementById(`config-${configKey}`);
+            if (recommendedItem) {
+                recommendedItem.classList.add('recommended');
+            }
+        }
+
+        // Toggle dropdown
+        window.toggleDropdown = function() {
+            const button = document.getElementById('dropdownButton');
+            if (button.disabled) {
+                return; // Do nothing if the button is disabled
+            }
+
+            const menu = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow'); // This ID is part of button's innerHTML
+            
+            menu.classList.toggle('open');
+            if (arrow) { // Check if arrow element exists (it should, as it's part of button's innerHTML)
+                arrow.classList.toggle('open');
+            }
+        }
+
+        // Select configuration
+        window.selectConfig = function(type) {
+            const mainGrid = document.getElementById('mainGrid');
+            const pageContent = document.getElementById('pageContent');
+            const pageTitle = document.getElementById('pageTitle');
+            const pageDescription = document.getElementById('pageDescription');
+            const infoGrid = document.getElementById('infoGrid');
+            const compositionGrid = document.getElementById('compositionGrid');
+
+            // Change background color
+            document.body.className = configurations[type].colorClass;
+
+            // Hide main grid, show page content
+            mainGrid.style.display = 'none';
+            pageContent.style.display = 'block';
+
+            // Set page content
+            const config = configurations[type];
+            pageTitle.textContent = config.title;
+            pageDescription.textContent = config.description;
+
+            // Populate composition summary
+            compositionGrid.innerHTML = `
+                <div class="composition-item">
+                    <div class="label">H2S</div>
+                    <div class="value">${gasComposition.h2s.toFixed(2)}%</div>
+                </div>
+                <div class="composition-item">
+                    <div class="label">CO2</div>
+                    <div class="value">${gasComposition.co2.toFixed(2)}%</div>
+                </div>
+                <div class="composition-item">
+                    <div class="label">NH3</div>
+                    <div class="value">${gasComposition.nh3.toFixed(2)}%</div>
+                </div>
+                <div class="composition-item">
+                    <div class="label">BTEX</div>
+                    <div class="value">${gasComposition.btex.toFixed(2)}%</div>
+                </div>
+                <div class="composition-item">
+                    <div class="label">Other HC</div>
+                    <div class="value">${gasComposition.other_hc.toFixed(2)}%</div>
+                </div>
+            `;
+
+            // Clear and populate info grid
+            infoGrid.innerHTML = '';
+            config.info.forEach(section => {
+                const infoCard = document.createElement('div');
+                infoCard.className = 'info-card';
+                
+                let itemsHtml = section.items.map(item => `<li>${item}</li>`).join('');
+                
+                infoCard.innerHTML = `
+                    <h3>${section.title}</h3>
+                    <ul>${itemsHtml}</ul>
+                `;
+                infoGrid.appendChild(infoCard);
+            });
+
+            // Add special considerations for NH3, BTEX, and Other HC if present
+            if (gasComposition.nh3 > 0 || gasComposition.btex > 0 || gasComposition.other_hc > 0) {
+                const specialCard = document.createElement('div');
+                specialCard.className = 'info-card';
+                
+                let specialItems = [];
+                if (gasComposition.nh3 > 0) {
+                    specialItems.push('NH3 destruction requires higher temperature');
+                    specialItems.push('Additional residence time for NH3 conversion');
+                    specialItems.push('NOx formation monitoring required');
+                }
+                if (gasComposition.btex > 0) {
+                    specialItems.push('BTEX destruction at elevated temperatures');
+                    specialItems.push('Enhanced mixing for complete combustion');
+                    specialItems.push('Potential for soot formation');
+                }
+                if (gasComposition.other_hc > 0) {
+                    specialItems.push('Hydrocarbon combustion considerations');
+                    specialItems.push('Flame stability monitoring');
+                    specialItems.push('Additional oxygen requirements');
+                }
+                
+                let itemsHtml = specialItems.map(item => `<li>${item}</li>`).join('');
+                
+                specialCard.innerHTML = `
+                    <h3>Special Considerations</h3>
+                    <ul>${itemsHtml}</ul>
+                `;
+                infoGrid.appendChild(specialCard);
+            }
+
+            // Close dropdown (if it was open)
+            const menu = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            if (menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                if(arrow) arrow.classList.remove('open');
+            }
+        }
+
+        // Go back to configuration
+        window.goBack = function() {
+            const mainGrid = document.getElementById('mainGrid');
+            const pageContent = document.getElementById('pageContent');
+            
+            // Reset background to default
+            document.body.className = '';
+            
+            mainGrid.style.display = 'grid';
+            pageContent.style.display = 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdownContainer = document.querySelector('.dropdown-container');
+            const dropdownButton = document.getElementById('dropdownButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            // Check if the click is outside the dropdown container
+            // And also ensure the click was not on the dropdown button itself (which has its own toggle logic)
+            if (dropdownContainer && !dropdownContainer.contains(event.target) && event.target !== dropdownButton) {
+                if (dropdownMenu.classList.contains('open')) {
+                    dropdownMenu.classList.remove('open');
+                    const arrow = document.getElementById('dropdownArrow');
+                    if (arrow) {
+                        arrow.classList.remove('open');
+                    }
+                }
+            }
+        });
+
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners to all input fields
+            const inputs = ['h2s', 'co2', 'nh3', 'btex', 'other_hc'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', updateTotal);
+                }
+            });
+            
+            // Initial calculation
+            updateTotal();
+        });
+    </script>
+</body>
+</html>
