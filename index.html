@@ -7,11 +7,11 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; color: #333; transition: background 0.5s ease; }
-        body.simple-mixer { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); }
+        body.Straight-through { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); }
         body.preheat { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
         body.acid-bypass { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); }
         body.acid-bypass-preheat { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
-        body.fuel-gas { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+        body.Co-firing { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
         body.catalytic { background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); text-align: center; }
@@ -51,11 +51,11 @@
         .dropdown-item.recommended { background: #e3f2fd; font-weight: bold; } /* Added font-weight */
         .dropdown-item.recommended:hover { background: #bbdefb; }
         .dropdown-item-icon { width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9em; }
-        .icon-simple-mixer { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); }
+        .icon-Straight-through { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); }
         .icon-preheat { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
         .icon-acid-bypass { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); }
         .icon-acid-bypass-preheat { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
-        .icon-fuel-gas { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+        .icon-Co-firing { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
         .icon-catalytic { background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); }
         .dropdown-item-content h4 { color: #1e3c72; margin-bottom: 3px; }
         .dropdown-item-content p { color: #666; font-size: 0.9em; }
@@ -135,11 +135,11 @@
                 <div class="dropdown-container">
                     <button class="dropdown-button" id="dropdownButton" onclick="toggleDropdown()" disabled><span>Enter gas composition first</span><span class="dropdown-arrow" id="dropdownArrow">▼</span></button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <div class="dropdown-item" id="config-simple-mixer" onclick="selectConfig('simple-mixer')"><div class="dropdown-item-icon icon-simple-mixer">>55%</div><div class="dropdown-item-content"><h4>Simple Mixer</h4><p><span class="h2s-percentage">H2S > 55%</span></p></div></div>
+                        <div class="dropdown-item" id="config-Straight-through" onclick="selectConfig('Straight-through')"><div class="dropdown-item-icon icon-Straight-through">>55%</div><div class="dropdown-item-content"><h4>Straight through</h4><p><span class="h2s-percentage">H2S > 55%</span></p></div></div>
                         <div class="dropdown-item" id="config-preheat" onclick="selectConfig('preheat')"><div class="dropdown-item-icon icon-preheat">30-55%</div><div class="dropdown-item-content"><h4>Preheat</h4><p><span class="h2s-percentage">H2S 30-55%</span></p></div></div>
                         <div class="dropdown-item" id="config-acid-bypass" onclick="selectConfig('acid-bypass')"><div class="dropdown-item-icon icon-acid-bypass">15-30%</div><div class="dropdown-item-content"><h4>Acid Gas Bypass</h4><p><span class="h2s-percentage">H2S 15-30%</span></p></div></div>
                         <div class="dropdown-item" id="config-acid-bypass-preheat" onclick="selectConfig('acid-bypass-preheat')"><div class="dropdown-item-icon icon-acid-bypass-preheat">10-15%</div><div class="dropdown-item-content"><h4>Acid Gas Bypass + Preheat</h4><p><span class="h2s-percentage">H2S 10-15%</span></p></div></div>
-                        <div class="dropdown-item" id="config-fuel-gas" onclick="selectConfig('fuel-gas')"><div class="dropdown-item-icon icon-fuel-gas">5-10%</div><div class="dropdown-item-content"><h4>Fuel Gas</h4><p><span class="h2s-percentage">H2S 5-10%</span></p></div></div>
+                        <div class="dropdown-item" id="config-Co-firing" onclick="selectConfig('Co-firing')"><div class="dropdown-item-icon icon-Co-firing">5-10%</div><div class="dropdown-item-content"><h4>Co-firing</h4><p><span class="h2s-percentage">H2S 5-10%</span></p></div></div>
                         <div class="dropdown-item" id="config-catalytic" onclick="selectConfig('catalytic')"><div class="dropdown-item-icon icon-catalytic"><5%</div><div class="dropdown-item-content"><h4>Catalytic Oxidation</h4><p><span class="h2s-percentage">H2S < 5%</span></p></div></div>
                     </div>
                 </div>
@@ -248,20 +248,20 @@
         let selectedDesignations = {};
       
 const sruDrawings = {
-    'simple-mixer': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Straight_through.png" alt="Simple Mixer Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'Straight-through': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Straight_through.png" alt="Straight through Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
     'preheat': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Acid_gas_preheat.png
 " alt="Preheat Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
     'acid-bypass': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Split_flow.png
 " alt="Acid Bypass Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
-    'acid-bypass-preheat': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Acid_gas_preheat.png
+    'acid-bypass-preheat': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/3c1629e3294a0c8875f0ba8f6d6df49b97a414e3/Acid_gas_bypass_preheat.png
 " alt="Acid Bypass + Preheat Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
-    'fuel-gas': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Co_firing.png" alt="Fuel Gas Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'Co-firing': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Co_firing.png" alt="Co-firing Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
     'catalytic': `<img src="https://your-server.com/images/catalytic-diagram.png" alt="Catalytic Oxidation Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`
 };
 
 
 // Replace placeholders with the detailed drawing
-const detailedDrawingActual = sruDrawings['simple-mixer'];
+const detailedDrawingActual = sruDrawings['Straight-through'];
 for (const key in sruDrawings) {
     if (sruDrawings[key].includes("Placeholder")) {
         sruDrawings[key] = detailedDrawingActual;
@@ -334,7 +334,7 @@ for (const key in sruDrawings) {
         };
         
         const configurations = {
-            'simple-mixer': { title: 'Simple Mixer Configuration', description: 'Optimized for H2S > 55%', colorClass: 'simple-mixer', 
+            'Straight-through': { title: 'Straight through Configuration', description: 'Optimized for H2S > 55%', colorClass: 'Straight-through', 
                 info: [{title: 'Process Parameters', items: ['Direct mixing','Minimal preheat']},{title: 'Equipment', items: ['Std. burner']}],
                 recommendedDesignations: { 'page-thermal-reactor': 'RF-101B', 'page-condenser-1': 'SC-102A', 'page-reheater-cat1': 'RH-105A', /* ... add all ... */ }
             },
@@ -350,8 +350,8 @@ for (const key in sruDrawings) {
                 info: [{title: 'Process', items: ['Combined bypass & preheat']},{title: 'Equipment', items: ['Dual controls']}],
                 recommendedDesignations: { 'page-thermal-reactor': 'F-202', 'page-condenser-1': 'E-202B', 'page-reheater-cat1': 'HX-205B', /* ... add all ... */ }
             },
-            'fuel-gas': { title: 'Fuel Gas Configuration', description: 'For H2S 5-10%', colorClass: 'fuel-gas', 
-                info: [{title: 'Process', items: ['Supplemental fuel']},{title: 'Equipment', items: ['Fuel gas system']}],
+            'Co-firing': { title: 'Co-firing Configuration', description: 'For H2S 5-10%', colorClass: 'Co-firing', 
+                info: [{title: 'Process', items: ['Supplemental fuel']},{title: 'Equipment', items: ['Co-firing system']}],
                 recommendedDesignations: { 'page-thermal-reactor': 'RF-101A', 'page-condenser-1': 'SC-102A', 'page-condenser-2': 'SC-103B', /* ... add all ... */ }
             },
             'catalytic': { title: 'Catalytic H2S Oxidation', description: 'For H2S < 5%', colorClass: 'catalytic', 
@@ -386,11 +386,11 @@ for (const key in sruDrawings) {
             box.style.display = 'block';
             document.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('recommended'));
             let key = '', text = '';
-            if (h2s > 55) { text = 'Simple Mixer'; key = 'simple-mixer'; }
+            if (h2s > 55) { text = 'Straight through'; key = 'Straight-through'; }
             else if (h2s >= 30) { text = 'Preheat'; key = 'preheat'; }
             else if (h2s >= 15) { text = 'Acid Gas Bypass'; key = 'acid-bypass'; }
             else if (h2s >= 10) { text = 'Acid Gas Bypass + Preheat'; key = 'acid-bypass-preheat'; }
-            else if (h2s >= 5) { text = 'Fuel Gas'; key = 'fuel-gas'; }
+            else if (h2s >= 5) { text = 'Co-firing'; key = 'Co-firing'; }
             else { text = 'Catalytic Oxidation'; key = 'catalytic'; }
             textEl.textContent = text + " Configuration";
             const item = document.getElementById(`config-${key}`);
@@ -484,7 +484,7 @@ for (const key in sruDrawings) {
             document.getElementById('pageDescription').textContent = config.description;
             document.getElementById('compositionGrid').innerHTML = `<div class="composition-item"><div class="label">H2S</div><div class="value">${gasComposition.h2s.toFixed(2)}%</div></div> <div class="composition-item"><div class="label">CO2</div><div class="value">${gasComposition.co2.toFixed(2)}%</div></div> <div class="composition-item"><div class="label">NH3</div><div class="value">${gasComposition.nh3.toFixed(2)}%</div></div> <div class="composition-item"><div class="label">BTEX</div><div class="value">${gasComposition.btex.toFixed(2)}%</div></div> <div class="composition-item"><div class="label">Other HC</div><div class="value">${gasComposition.other_hc.toFixed(2)}%</div></div>`;
             
-            sruDrawingContainer.innerHTML = sruDrawings[type] || sruDrawings['simple-mixer'];
+            sruDrawingContainer.innerHTML = sruDrawings[type] || sruDrawings['Straight-through'];
 
             const infoGrid = document.getElementById('infoGrid');
             infoGrid.innerHTML = '';
