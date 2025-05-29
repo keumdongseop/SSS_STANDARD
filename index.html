@@ -246,69 +246,27 @@
     <script>
         let gasComposition = { h2s: 0, co2: 0, nh3: 0, btex: 0, other_hc: 0 };
         let selectedDesignations = {};
-
-        const sruDrawings = {
-            'simple-mixer': `
-                <svg id="interactive-sru-diagram-page" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
-                    <defs>
-                        <marker id="arrowhead-feed" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto" fill="#0056b3"><polygon points="0 0, 10 3.5, 0 7"/></marker>
-                        <marker id="arrowhead-process" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto" fill="#555"><polygon points="0 0, 10 3.5, 0 7"/></marker>
-                        <marker id="arrowhead-sulphur" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto" fill="#DAA520"><polygon points="0 0, 8 3, 0 6"/></marker>
-                         <marker id="arrowhead-hotgas" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto" fill="#E53935"><polygon points="0 0, 10 3.5, 0 7"/></marker>
-                        <filter id="shadow-filter" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/></filter>
-                         <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8"><path d="M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4" stroke="#4CAF50" stroke-width="1"/></pattern>
-                    </defs>
-                    <g id="page-overall-flow-arrow"><line x1="30" y1="50" x2="100" y2="50" stroke="#0056b3" stroke-width="15" marker-end="url(#arrowhead-feed)"/><text x="65" y="40" class="svg-stream-label" fill="#0056b3">Main Flow</text></g>
-                    <g id="page-feed-d44-1" transform="translate(50, 120)" class="equipment-hover" filter="url(#shadow-filter)"><path d="M0,0 L50,0 L70,20 L50,40 L0,40 L20,20 Z" fill="#B3E5FC" stroke="#0277BD" stroke-width="1.5"/><text x="35" y="25" class="svg-equipment-label" fill="#01579B">D44-1</text></g>
-                    <g id="page-feed-d44-2" transform="translate(50, 200)" class="equipment-hover" filter="url(#shadow-filter)"><path d="M0,0 L50,0 L70,20 L50,40 L0,40 L20,20 Z" fill="#B3E5FC" stroke="#0277BD" stroke-width="1.5"/><text x="35" y="18" class="svg-equipment-label" fill="#01579B">D44-2</text><text x="35" y="32" class="svg-stream-label" font-size="9" fill="#01579B">Acid Gas (Amine)</text></g>
-                    <g id="page-feed-d44-3" transform="translate(50, 280)" class="equipment-hover" filter="url(#shadow-filter)"><path d="M0,0 L50,0 L70,20 L50,40 L0,40 L20,20 Z" fill="#B3E5FC" stroke="#0277BD" stroke-width="1.5"/><text x="35" y="18" class="svg-equipment-label" fill="#01579B">D44-3</text><text x="35" y="32" class="svg-stream-label" font-size="9" fill="#01579B">Comb. Air</text></g>
-                    <g id="page-thermal-reactor" transform="translate(240, 200)" class="equipment-hover" filter="url(#shadow-filter)"><rect x="0" y="0" width="250" height="250" fill="#FFCDD2" stroke="#C62828" stroke-width="2" rx="5"/><rect x="-30" y="20" width="30" height="60" fill="#EF9A9A" stroke="#C62828" stroke-width="1.5" rx="3"/><rect x="20" y="15" width="80" height="20" fill="#EF9A9A" stroke="#C62828" stroke-width="1.5" rx="3"/><text x="60" y="55" class="svg-equipment-label" fill="#B71C1C">Thermal Reactor</text></g>
-                    <g id="page-condenser-1" transform="translate(370, 180)" class="equipment-hover" filter="url(#shadow-filter)"><rect x="0" y="0" width="130" height="100" fill="#C5CAE9" stroke="#303F9F" stroke-width="2" rx="5"/><rect x="90" y="10" width="30" height="80" fill="url(#hatch)" stroke="#303F9F" stroke-width="1"/><line x1="85" y1="5" x2="85" y2="95" stroke="#303F9F" stroke-width="1.5"/><text x="45" y="55" class="svg-equipment-label" fill="#1A237E">1st Condenser</text></g>
-                    <g id="page-condenser-2" transform="translate(570, 180)" class="equipment-hover" filter="url(#shadow-filter)"><rect x="0" y="0" width="130" height="100" fill="#C5CAE9" stroke="#303F9F" stroke-width="2" rx="5"/><rect x="90" y="10" width="30" height="80" fill="url(#hatch)" stroke="#303F9F" stroke-width="1"/><line x1="85" y1="5" x2="85" y2="95" stroke="#303F9F" stroke-width="1.5"/><text x="45" y="55" class="svg-equipment-label" fill="#1A237E">2nd Condenser</text></g>
-                    <g id="page-condenser-3" transform="translate(770, 180)" class="equipment-hover" filter="url(#shadow-filter)"><rect x="0" y="0" width="130" height="100" fill="#C5CAE9" stroke="#303F9F" stroke-width="2" rx="5"/><rect x="90" y="10" width="30" height="80" fill="url(#hatch)" stroke="#303F9F" stroke-width="1"/><line x1="85" y1="5" x2="85" y2="95" stroke="#303F9F" stroke-width="1.5"/><text x="45" y="55" class="svg-equipment-label" fill="#1A237E">3rd Condenser</text></g>
-                    <g id="page-reheater-cat1" transform="translate(400, 30)" class="equipment-hover" filter="url(#shadow-filter)"><ellipse cx="30" cy="15" rx="30" ry="15" fill="#A5D6A7" stroke="#2E7D32" stroke-width="1.5"/><rect x="0" y="15" width="60" height="70" fill="#A5D6A7" stroke="#2E7D32" stroke-width="1.5"/><ellipse cx="30" cy="85" rx="30" ry="15" fill="#A5D6A7" stroke="#2E7D32" stroke-width="1.5"/><text x="30" y="55" class="svg-equipment-label" fill="#1B5E20">Reheater</text></g>
-                    <g id="page-cat-converter-1" transform="translate(500, 30)" class="equipment-hover" filter="url(#shadow-filter)"><ellipse cx="60" cy="15" rx="60" ry="15" fill="#81C784" stroke="#2E7D32" stroke-width="2"/><rect x="0" y="15" width="120" height="70" fill="#81C784" stroke="#2E7D32" stroke-width="2"/><ellipse cx="60" cy="85" rx="60" ry="15" fill="#81C784" stroke="#2E7D32" stroke-width="2"/><line x1="15" y1="25" x2="105" y2="75" stroke="#1B5E20" stroke-width="2"/><line x1="105" y1="25" x2="15" y2="75" stroke="#1B5E20" stroke-width="2"/><text x="60" y="55" class="svg-equipment-label" fill="#1B5E20">1st Converter</text></g>
-                    <g id="page-sulphur-seal-1" transform="translate(660, 40)" class="equipment-hover" filter="url(#shadow-filter)"><circle cx="25" cy="25" r="25" fill="#FFECB3" stroke="#FFA000" stroke-width="2"/><path d="M5,5 L15,15 M15,5 L5,15" stroke="red" stroke-width="2.5" marker-start="url(#arrowhead-hotgas)" marker-end="url(#arrowhead-hotgas)"/><text x="25" y="60" class="svg-equipment-label" fill="#E65100">Seal 1</text></g>
-                    <g id="page-cat-converter-2" transform="translate(750, 30)" class="equipment-hover" filter="url(#shadow-filter)"><ellipse cx="60" cy="15" rx="60" ry="15" fill="#81C784" stroke="#2E7D32" stroke-width="2"/><rect x="0" y="15" width="120" height="70" fill="#81C784" stroke="#2E7D32" stroke-width="2"/><ellipse cx="60" cy="85" rx="60" ry="15" fill="#81C784" stroke="#2E7D32" stroke-width="2"/><line x1="15" y1="25" x2="105" y2="75" stroke="#1B5E20" stroke-width="2"/><line x1="105" y1="25" x2="15" y2="75" stroke="#1B5E20" stroke-width="2"/><text x="60" y="55" class="svg-equipment-label" fill="#1B5E20">2nd Converter</text></g>
-                    <g id="page-sulphur-seal-2" transform="translate(910, 40)" class="equipment-hover" filter="url(#shadow-filter)"><circle cx="25" cy="25" r="25" fill="#FFECB3" stroke="#FFA000" stroke-width="2"/><path d="M5,5 L15,15 M15,5 L5,15" stroke="red" stroke-width="2.5" marker-start="url(#arrowhead-hotgas)" marker-end="url(#arrowhead-hotgas)"/><text x="25" y="60" class="svg-equipment-label" fill="#E65100">Seal 2</text></g>
-                    <line x1="120" y1="140" x2="165" y2="140" stroke="#0288D1" stroke-width="2.5" marker-end="url(#arrowhead-feed)" class="stream-hover" data-stream="page-feed-d44-1-stream"/>
-                    <line x1="120" y1="220" x2="165" y2="220" stroke="#0288D1" stroke-width="2.5" marker-end="url(#arrowhead-feed)" class="stream-hover" data-stream="page-feed-d44-2-stream"/>
-                    <line x1="120" y1="300" x2="165" y2="300" stroke="#0288D1" stroke-width="2.5" marker-end="url(#arrowhead-feed)" class="stream-hover" data-stream="page-feed-d44-3-stream"/>
-                    <line x1="300" y1="230" x2="330" y2="230" stroke="#AD1457" stroke-width="3" marker-end="url(#arrowhead-hotgas)" class="stream-hover" data-stream="tr-to-cond1-stream"/><text x="315" y="220" class="svg-stream-label" fill="#AD1457">Hot Gas</text>
-                    <line x1="460" y1="230" x2="490" y2="230" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="cond1-to-cond2-stream"/>
-                    <line x1="620" y1="230" x2="650" y2="230" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="cond2-to-cond3-stream"/>
-                    <line x1="395" y1="280" x2="395" y2="350" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-cond1-stream"/><text x="395" y="330" class="svg-stream-label" fill="#B8860B">S</text>
-                    <line x1="555" y1="280" x2="555" y2="350" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-cond2-stream"/><text x="555" y="330" class="svg-stream-label" fill="#B8860B">S</text>
-                    <line x1="715" y1="280" x2="715" y2="350" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-cond3-stream"/><text x="715" y="330" class="svg-stream-label" fill="#B8860B">S</text>
-                    <line x1="395" y1="350" x2="715" y2="350" stroke="#DAA520" stroke-width="2" class="stream-hover" data-stream="sulphur-mainline-cond-stream"/>
-                    <line x1="555" y1="350" x2="555" y2="380" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-to-pit-cond-stream"/><text x="555" y="400" class="svg-stream-label" fill="#B8860B">To Sulphur Pit</text>
-                    <path d="M460 210 Q470 150 430 100 L430 85" stroke="#546E7A" stroke-width="2.5" fill="none" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="procgas-to-reheater-stream"/><text x="450" y="130" class="svg-stream-label">To Reheater</text>
-                    <line x1="460" y1="60" x2="500" y2="60" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="reheater-to-cat1-stream"/>
-                    <line x1="620" y1="60" x2="660" y2="60" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="cat1-to-seal1-stream"/>
-                    <line x1="710" y1="60" x2="750" y2="60" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="seal1-to-cat2-stream"/>
-                    <line x1="870" y1="60" x2="910" y2="60" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="cat2-to-seal2-stream"/>
-                    <line x1="960" y1="60" x2="1000" y2="60" stroke="#546E7A" stroke-width="2.5" marker-end="url(#arrowhead-process)" class="stream-hover" data-stream="tailgas-stream"/><text x="1030" y="65" class="svg-stream-label">Tail Gas</text>
-                    <line x1="685" y1="90" x2="685" y2="120" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-seal1-stream"/><text x="685" y="110" class="svg-stream-label" fill="#B8860B">S</text>
-                    <line x1="935" y1="90" x2="935" y2="120" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-seal2-stream"/><text x="935" y="110" class="svg-stream-label" fill="#B8860B">S</text>
-                    <line x1="685" y1="120" x2="935" y2="120" stroke="#DAA520" stroke-width="2" class="stream-hover" data-stream="sulphur-mainline-seal-stream"/>
-                    <line x1="810" y1="120" x2="810" y2="150" stroke="#DAA520" stroke-width="2" marker-end="url(#arrowhead-sulphur)" class="stream-hover" data-stream="sulphur-to-pit-seal-stream"/><text x="810" y="170" class="svg-stream-label" fill="#B8860B">To Sulphur Pit</text>
-                    <rect x="0" y="0" width="1200" height="700" fill="none" stroke="#ccc" stroke-width="1" stroke-dasharray="5,5"/>
-                </svg>
-            `,
-            'preheat': `<svg id="interactive-sru-diagram-page" viewBox="0 0 300 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Preheat Drawing Placeholder</text></svg>`,
-            'acid-bypass': `<svg id="interactive-sru-diagram-page" viewBox="0 0 300 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Acid Bypass Drawing Placeholder</text></svg>`,
-            'acid-bypass-preheat': `<svg id="interactive-sru-diagram-page" viewBox="0 0 300 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Acid Bypass + Preheat Drawing</text></svg>`,
-            'fuel-gas': `<svg id="interactive-sru-diagram-page" viewBox="0 0 300 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Fuel Gas Drawing Placeholder</text></svg>`,
-            'catalytic': `<svg id="interactive-sru-diagram-page" viewBox="0 0 300 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Catalytic Oxidation Drawing</text></svg>`
-        };
-        const detailedDrawingActual = sruDrawings['simple-mixer'];
-        for (const key in sruDrawings) {
-            if (sruDrawings[key].includes("Placeholder")) {
-                sruDrawings[key] = detailedDrawingActual;
-            }
-        }
+      
+const sruDrawings = {
+    'simple-mixer': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Straight_through.png" alt="Simple Mixer Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'preheat': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Acid_gas_preheat.png
+" alt="Preheat Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'acid-bypass': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Split_flow.png
+" alt="Acid Bypass Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'acid-bypass-preheat': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Acid_gas_preheat.png
+" alt="Acid Bypass + Preheat Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'fuel-gas': `<img src="https://raw.githubusercontent.com/keumdongseop/SSS_STANDARD/33b4f8201649f8febbc1c3037fc2017360ac3ca7/Co_firing.png" alt="Fuel Gas Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`,
+    'catalytic': `<img src="https://your-server.com/images/catalytic-diagram.png" alt="Catalytic Oxidation Configuration" style="width: 100%; height: auto; max-height: 600px; object-fit: contain;">`
+};
 
 
+// Replace placeholders with the detailed drawing
+const detailedDrawingActual = sruDrawings['simple-mixer'];
+for (const key in sruDrawings) {
+    if (sruDrawings[key].includes("Placeholder")) {
+        sruDrawings[key] = detailedDrawingActual;
+    }
+}
         const equipmentData = {
             "page-feed-d44-1": { name:"Feed D44-1", type:"Auxiliary Acid Gas", pressure:"0.4 barg", temp:"Ambient"},
             "page-feed-d44-2": { name:"Feed D44-2", type:"Main Acid Gas (Amine)", pressure:"0.5 barg", temp:"60°C"},
