@@ -114,7 +114,7 @@
     <div class="container">
         <div class="header">
              <h1>GS E&C SRU Standardization Platform</h1>
-             <p>H2S-Based Configuration Selection System</p>
+             <p>Composition-Based Configuration Selection System</p>
         </div>
 
         <div class="main-grid" id="mainGrid">
@@ -334,12 +334,12 @@ for (const key in sruDrawings) {
         };
         
         const configurations = {
-            'Straight-through': { title: 'Straight through Configuration', description: 'Optimized for H2S > 55%', colorClass: 'Straight-through', 
-                info: [{title: 'Process Parameters', items: ['Direct mixing','Minimal preheat']},{title: 'Equipment', items: ['Std. burner']}],
+            'Straight-through': { title: 'Straight through Configuration', description: 'Optimized for H2S > 55% with ammonia content', colorClass: 'Straight-through', 
+                info: [{title: 'Process Parameters', items: ['H2S/SO2 Ratio fixed @ 2.0','Air preheating > 230C']},{title: 'Equipment', items: ['Air preheater','Reaction furnace','Waste heat boiler','1st condenser','1st reheater','1st claus reactor','2nd condenser','2nd reheater','2nd claus reactor','3rd condenser']}],
                 recommendedDesignations: { 'page-thermal-reactor': 'RF-101B', 'page-condenser-1': 'SC-102A', 'page-reheater-cat1': 'RH-105A', /* ... add all ... */ }
             },
             'preheat': { title: 'Preheat Configuration', description: 'For H2S 30-55%', colorClass: 'preheat', 
-                info: [{title: 'Process', items: ['AG preheat']},{title: 'Equipment', items: ['Preheat Exchanger']}],
+                info: [{title: 'Process Parameters', items: ['H2S/SO2 Ratio fixed @ 2.0','Air preheating > 230C']},{title: 'Equipment', items: ['Preheat Exchanger']}],
                 recommendedDesignations: { 'page-thermal-reactor': 'RF-101A', 'page-condenser-1': 'SC-102B', 'page-reheater-cat1': 'RH-105B', /* ... add all ... */ }
             },
             'acid-bypass': { title: 'Acid Gas Bypass', description: 'For H2S 15-30%', colorClass: 'acid-bypass', 
@@ -497,7 +497,7 @@ for (const key in sruDrawings) {
             if (gasComposition.nh3 > 0 || gasComposition.btex > 0 || gasComposition.other_hc > 0) { 
                  const specialCard = document.createElement('div'); specialCard.className = 'info-card';
                 let specialItems = [];
-                if (gasComposition.nh3 > 0) specialItems.push('NH3 destruction requires higher temperature');
+                if (gasComposition.nh3 > 0) specialItems.push('Flame temperature > 1350C for NH3 destruction');
                 if (gasComposition.btex > 0) specialItems.push('BTEX destruction at elevated temperatures');
                 if (gasComposition.other_hc > 0) specialItems.push('Hydrocarbon combustion considerations');
                 specialCard.innerHTML = `<h3>Special Considerations</h3><ul>${specialItems.map(i=>`<li>${i}</li>`).join('')}</ul>`;
